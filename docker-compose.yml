@@ -6,7 +6,7 @@ services:
     image: ghcr.io/ivanfioravanti/chatbot-ollama:main
 
     environment:
-      - DEFAULT_MODEL=llama2
+      - DEFAULT_MODEL=mistral
       - OLLAMA_HOST=http://ollama:11434
 
     depends_on:
@@ -32,7 +32,7 @@ services:
     entrypoint: >
       sh -c "
       sleep 10 &&
-      ollama pull llama2
+      ollama pull mistral
       "
     environment:
       - OLLAMA_HOST=http://ollama:11434
