@@ -5,16 +5,6 @@ services:
   chatgpt:
     image: ghcr.io/ivanfioravanti/chatbot-ollama:main
 
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.nuxt.rule: "Host(`ollama.inversoft.click`)"
-      traefik.http.routers.nuxt.entrypoints: "websecure"
-      traefik.http.routers.nuxt.tls.certresolver: "letsencrypt"
-      traefik.http.services.nuxt.loadbalancer.server.port: "3000"
-
-    ports:
-      - "0:3000"
-
     environment:
       - DEFAULT_MODEL=llama2
       - OLLAMA_HOST=http://ollama:11434
@@ -41,7 +31,6 @@ services:
       - ollama
     entrypoint: >
       sh -c "
-      echo 'Esperando ollama...' &&
       sleep 10 &&
       ollama pull llama2
       "
