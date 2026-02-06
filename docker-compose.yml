@@ -3,6 +3,8 @@ version: "3.9"
 services:
 
   chatgpt:
+    ports:
+        - "0:3000"
     image: ghcr.io/ivanfioravanti/chatbot-ollama:main
 
     environment:
@@ -18,7 +20,7 @@ services:
     ollama:
       image: ollama/ollama:latest
       ports:
-        - "11434:11434"
+        - "0:11434"
       volumes:
         - ./ollama/models:/ollama/models
       environment:
