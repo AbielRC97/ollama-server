@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nuxt.rule=Host(`ollama.inversoft.click`)"
+      - "traefik.http.routers.nuxt.entrypoints=websecure"
+      - "traefik.http.routers.nuxt.tls.certresolver=letsencrypt"
+      - "traefik.http.services.nuxt.loadbalancer.server.port=3000"
+
+  chatgpt:
+    image: ghcr.io/ivanfioravanti/chatbot-ollama:main
+    ports:
+      - "3000:3000"
+    environment:
+      - DEFAULT_MODEL=llama2
+      - OLLAMA_HOST=http://ollama:11434
+    depends_on:
+      - ollama
+    networks:
+      - ollama_net
+
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ./ollama/models:/ollama/models
+    environment:
+      - OLLAMA_MODELS=/ollama/models
+      - OLLAMA_KEEP_ALIVE=24h
+    networks:
+      - ollama_net
+
+  ollama-init:
+    image: ollama/ollama:latest
+    depends_on:
+      - ollama
+    entrypoint: >
+      sh -c "
+      echo 'Esperando ollama...' &&
+      sleep 10 &&
+      ollama pull llama2
+      "
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    networks:
+      - ollama_net
+
+networks:
+  ollama_net:
